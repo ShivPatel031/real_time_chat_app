@@ -29,9 +29,6 @@ app.use(
 
 const port = process.env.PORT || 8000;
 
-app.get("/", (req, res) => {
-  return res.json({ message: "welcome to chat app." });
-});
 
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
