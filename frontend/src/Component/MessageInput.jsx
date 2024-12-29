@@ -9,10 +9,9 @@ const MessageInput = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const [filedata,setFiledata]=useState()
-  const { sendMessage } = useChatStore();
+  const { selectedUser,sendMessage,sendGroupMessage } = useChatStore();
 
   const handleImageChange = (e) => {
-    // console.log(e.target.files)
     const file = e.target.files[0];
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
@@ -39,7 +38,16 @@ const MessageInput = () => {
       const messageData = new FormData();
       messageData.append("text", text.trim());
       messageData.append("image", filedata);
-      await sendMessage(messageData);
+
+      if(selectedUser)
+      {
+        await sendMessage(messageData);
+      }
+      else
+      {
+        await sendGroupMessage(messageData);
+      }
+      
 
       // Clear form
       setText("");
@@ -74,10 +82,10 @@ const MessageInput = () => {
       )}
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2">
+        <div className="flex-1 flex justify-between w-full input input-bordered rounded-lg input-sm sm:input-md">
           <input
             type="text"
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
+            className="w-full"
             placeholder="Type a message..."
             value={text}
             onChange={(e) => setText(e.target.value)}
@@ -92,7 +100,7 @@ const MessageInput = () => {
 
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle
+            className={`
                      ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
@@ -101,7 +109,7 @@ const MessageInput = () => {
         </div>
         <button
           type="submit"
-          className="btn btn-sm btn-circle"
+          className="btn max-sm:btn-sm btn-circle"
           disabled={!text.trim() && !imagePreview}
         >
           <Send size={22} />

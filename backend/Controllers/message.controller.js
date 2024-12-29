@@ -41,7 +41,7 @@ export const getMessage = async (req,res)=>{
         return res.status(200).json({success:true,message:"messages found successfully.",data:message});
     } catch (error) {
         console.log("something went wrong while fetching data. "+error.message);
-        return res.status(500).json({success:false,message:"sonthing  went wrong."});
+        return res.status(500).json({success:false,message:"something  went wrong."});
     }
 
 }

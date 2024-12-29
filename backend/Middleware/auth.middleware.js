@@ -15,6 +15,7 @@ export const auth=async (req,res,next)=>{
             }) 
         }
 
+
         //decoding jwt token
         try{
             const decode=jwt.verify(token,process.env.JWT_SECRET);

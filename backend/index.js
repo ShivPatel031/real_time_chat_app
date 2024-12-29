@@ -7,13 +7,13 @@ import authRoute from "./Routes/auth.routes.js";
 import messageRoute from "./Routes/message.routes.js";
 import { cloudinaryConnect } from "./Config/Cloudinary.js";
 import cors from "cors";
-import path from "path";
 import { app, server } from "./Utility/Socket.js";
+import path from "path"
 config();
 
 // const app = express();
 
-const __dirname = path.resolve();
+const __dirname= path.resolve();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -29,21 +29,22 @@ app.use(
 
 const port = process.env.PORT || 8000;
 
+// app.get("/", (req, res) => {
+//   return res.json({ message: "welcome to chat app." });
+// });
 
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
 
-ConnectDB();
-cloudinaryConnect();
-
-
-
 app.use(express.static(path.join(__dirname,"../frontend/dist")));
-
 app.get("*",(req,res)=>{
-  res.sendFile(path.join(__dirname,"../frontend/dist/index.html"));
+  res.sendFile(path.join(__dirname,"../frontend","dist","index.html"))
 })
 
+
+
+ConnectDB();
+cloudinaryConnect();
 
 server.listen(port, () => {
   console.log("Server is running on port no. " + port);

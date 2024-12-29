@@ -16,17 +16,33 @@ const ChatContainer = () => {
     selectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
+    selectedGroup,
+    getGroupMessage,
+    subscribeToGroupMessages,
+    unsubscribeFromGroupMessages
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    getMessages(selectedUser._id);
+    if(selectedUser)
+    {
+      getMessages(selectedUser?._id);
+      subscribeToMessages();
+    }
+    else{
+      getGroupMessage(selectedGroup?._id)
+      subscribeToGroupMessages();
+    }
+    
 
-    subscribeToMessages();
+    
 
-    return () => unsubscribeFromMessages();
-  }, [selectedUser._id, getMessages , subscribeToMessages , unsubscribeFromMessages]);
+    return () => {
+      if(selectedUser) unsubscribeFromMessages();
+      else unsubscribeFromGroupMessages();
+    }
+  }, [selectedUser?._id, getMessages , subscribeToMessages , unsubscribeFromMessages]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -61,7 +77,7 @@ const ChatContainer = () => {
                   src={
                     message.senderId === authUser._id
                       ? authUser.profilePic || "/user.png"
-                      : selectedUser.profilePic || "/user.png"
+                      : selectedUser ? selectedUser.profilePic : "/user.png"
                   }
                   alt="profile pic"
                 />
